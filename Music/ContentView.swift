@@ -7,18 +7,20 @@
 
 import SwiftUI
 
+/// 主视图容器
 struct ContentView: View {
+    // MARK: - Properties
+    
+    @EnvironmentObject private var projectManager: ProjectManager
+    
+    // MARK: - Body
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        ProjectListView(projectManager: projectManager)
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(ProjectManager())
 }

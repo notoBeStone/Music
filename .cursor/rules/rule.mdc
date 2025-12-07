@@ -1,0 +1,122 @@
+---
+alwaysApply: true
+---
+
+# 乐器循环录音 App 开发规范
+
+## 1. 颜色使用规范
+- 所有的颜色定义都必须使用 `ColorTheme`
+- 背景色：使用 `ColorTheme.background`、`ColorTheme.backgroundSecondary`、`ColorTheme.cardBackground`
+- 文本色：使用 `ColorTheme.textPrimary`、`ColorTheme.textSecondary`、`ColorTheme.textTertiary`
+- 主题色：使用 `ColorTheme.primary`、`ColorTheme.primaryVariant`、`ColorTheme.accent`
+- 功能色：使用 `ColorTheme.success`、`ColorTheme.warning`、`ColorTheme.error`
+- 音轨色：使用 `ColorTheme.trackColor(at: index)` 获取音轨颜色
+- 渐变：使用 `ColorTheme.primaryGradient`、`ColorTheme.backgroundGradient`
+- 禁止直接使用 `Color.red`、`Color.blue` 等系统颜色
+
+## 2. SwiftUI 代码风格
+- 使用 SwiftUI 优先，避免使用 UIKit（除非必要的音频处理）
+- 视图拆分：单个视图不超过 200 行，复杂视图拆分为子组件
+- 使用 `@State`、`@Binding`、`@ObservedObject`、`@StateObject` 正确管理状态
+- 使用 `@MainActor` 标记 UI 相关的类和方法
+- 优先使用声明式语法，避免命令式代码
+
+## 3. MVVM 架构规范
+- **Models**：纯数据模型，实现 `Codable`、`Identifiable`
+- **ViewModels**：使用 `ObservableObject`，发布 `@Published` 属性
+- **Views**：只负责 UI 展示，业务逻辑在 ViewModel 中
+- ViewModel 命名：`XxxViewModel`，如 `ProjectListViewModel`
+- ViewModel 必须是 `@MainActor` 类，确保 UI 更新在主线程
+
+## 4. 文件命名和组织
+- Swift 文件使用大驼峰命名：`AudioEngineManager.swift`
+- 文件夹结构清晰：
+  - `Models/` - 数据模型
+  - `ViewModels/` - 视图模型
+  - `Views/` - 视图组件
+  - `Managers/` - 业务管理器
+  - `Services/` - 服务层
+  - `Utilities/` - 工具类
+- 每个文件只包含一个主要的类/结构体
+- 使用 `// MARK: -` 分隔代码区块
+
+## 5. 音频处理规范
+- 使用 `AVAudioEngine` 处理多轨音频
+- 使用 `AVAudioRecorder` 进行录音
+- 采样率：48kHz，位深度：16-bit
+- 音频操作必须在后台队列执行，UI 更新必须回到主线程
+- 使用 `DispatchQueue` 或 `async/await` 处理异步操作
+- 音频文件格式：内部使用 WAV，导出支持 MP3/M4A
+- 及时释放音频资源，避免内存泄漏
+
+## 6. 错误处理规范
+- 使用 `Result<Success, Error>` 或 `throws` 处理错误
+- 定义自定义错误类型：`enum AudioError: LocalizedError`
+- 错误信息本地化，提供用户友好的错误提示
+- 关键操作添加 `do-catch` 错误处理
+- 使用日志记录错误：`print("[Error] \(error.localizedDescription)")`
+
+## 7. 性能要求
+- 录音到播放延迟 < 50ms
+- 多轨播放同步误差 < 10ms
+- 避免在主线程执行耗时操作
+- 使用懒加载和缓存优化性能
+- 及时释放不使用的资源
+
+## 8. 注释规范
+- 使用 `///` 文档注释标记公开 API
+- 复杂逻辑添加行内注释说明
+- 每个文件顶部包含文件说明注释
+- 使用 `// MARK: -` 分隔功能区块
+- 使用 `// TODO:` 标记待完成功能
+- 使用 `// FIXME:` 标记需要修复的问题
+
+## 9. 命名规范
+- 类名、结构体、枚举：大驼峰 `AudioEngineManager`
+- 方法、变量、常量：小驼峰 `startRecording()`
+- 布尔值使用 `is`、`has`、`should` 前缀：`isRecording`、`hasAudio`
+- 私有属性使用下划线前缀（可选）：`private var _audioEngine`
+- 常量使用有意义的名称，避免魔法数字
+
+## 10. 测试和调试
+- 关键功能添加单元测试
+- 使用 `#if DEBUG` 添加调试代码
+- 使用断言验证关键逻辑：`assert()`、`precondition()`
+- 添加完善的日志输出，方便调试
+
+## 11. 代码示例
+
+### ViewModel 示例
+```swift
+@MainActor
+final class RecordingViewModel: ObservableObject {
+    @Published var isRecording = false
+    @Published var tracks: [Track] = []
+    
+    private let audioEngine: AudioEngineManager
+    
+    init(audioEngine: AudioEngineManager) {
+        self.audioEngine = audioEngine
+    }
+    
+    func startRecording() async throws {
+        isRecording = true
+        try await audioEngine.startRecording()
+    }
+}
+```
+
+### View 示例
+```swift
+struct RecordingView: View {
+    @StateObject private var viewModel: RecordingViewModel
+    
+    var body: some View {
+        VStack {
+            // UI 代码
+        }
+        .background(ColorTheme.background)
+        .foregroundColor(ColorTheme.textPrimary)
+    }
+}
+```
