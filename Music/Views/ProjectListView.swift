@@ -2,7 +2,7 @@
 //  ProjectListView.swift
 //  Music
 //
-//  Created by 彭瑞淋 on 2025/12/8.
+//  Created by AI on 2025/12/16.
 //
 
 import SwiftUI
@@ -11,14 +11,8 @@ import SwiftUI
 struct ProjectListView: View {
     // MARK: - Properties
     
-    @StateObject private var viewModel: ProjectListViewModel
-    @State private var selectedProject: Project?
-    
-    // MARK: - Initialization
-    
-    init(projectManager: ProjectManager) {
-        _viewModel = StateObject(wrappedValue: ProjectListViewModel(projectManager: projectManager))
-    }
+    @StateObject private var viewModel = ProjectListViewModel()
+    @State private var selectedProject: ProjectModel?
     
     // MARK: - Body
     
@@ -35,7 +29,7 @@ struct ProjectListView: View {
                     projectListView
                 }
             }
-            .navigationTitle("我的项目")
+            .navigationTitle(LocalizedString.ProjectList.title)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -49,19 +43,19 @@ struct ProjectListView: View {
             .sheet(isPresented: $viewModel.showingCreateDialog) {
                 createProjectSheet
             }
-            .alert("错误", isPresented: $viewModel.showingError) {
-                Button("确定", role: .cancel) { }
+            .alert(LocalizedString.Common.error, isPresented: $viewModel.showingError) {
+                Button(LocalizedString.Common.ok, role: .cancel) { }
             } message: {
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
+                if let message = viewModel.errorMessage {
+                    Text(message)
                 }
             }
             .navigationDestination(item: $selectedProject) { project in
-                RecordingView(project: project, projectManager: viewModel.projectManager)
+                MainView(project: project)
             }
         }
         .onAppear {
-            viewModel.refreshProjects()
+            viewModel.loadProjects()
         }
     }
     
@@ -73,11 +67,11 @@ struct ProjectListView: View {
                 .font(.system(size: 80))
                 .foregroundColor(ColorTheme.textTertiary)
             
-            Text("还没有项目")
+            Text(LocalizedString.ProjectList.emptyTitle)
                 .font(.title2.bold())
                 .foregroundColor(ColorTheme.textPrimary)
             
-            Text("点击右上角的 + 按钮\n创建你的第一个音乐项目")
+            Text(LocalizedString.ProjectList.emptyMessage)
                 .font(.body)
                 .foregroundColor(ColorTheme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -85,7 +79,7 @@ struct ProjectListView: View {
             Button(action: viewModel.showCreateDialog) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
-                    Text("创建项目")
+                    Text(LocalizedString.ProjectList.emptyCreateButton)
                 }
                 .font(.headline)
                 .foregroundColor(.white)
@@ -96,6 +90,7 @@ struct ProjectListView: View {
                 .shadow(color: ColorTheme.primary.opacity(0.3), radius: 10, x: 0, y: 5)
             }
         }
+        .padding()
     }
     
     // MARK: - Project List View
@@ -104,9 +99,10 @@ struct ProjectListView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(viewModel.projects) { project in
-                    ProjectCardView(
+                    ProjectCard(
                         project: project,
                         onTap: {
+                            viewModel.openProject(project)
                             selectedProject = project
                         },
                         onDelete: {
@@ -138,38 +134,34 @@ struct ProjectListView: View {
                     
                     // 输入框
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("项目名称")
+                        Text(LocalizedString.ProjectList.Create.nameLabel)
                             .font(.subheadline.bold())
                             .foregroundColor(ColorTheme.textSecondary)
                         
-                        TextField("输入项目名称", text: $viewModel.newProjectName)
+                        TextField(LocalizedString.ProjectList.Create.namePlaceholder, text: $viewModel.newProjectName)
                             .font(.body)
                             .foregroundColor(ColorTheme.textPrimary)
                             .padding()
                             .background(ColorTheme.inputBackground)
                             .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .strokeBorder(ColorTheme.border, lineWidth: 1)
-                            )
                     }
                     
                     Spacer()
                 }
                 .padding(32)
             }
-            .navigationTitle("新建项目")
+            .navigationTitle(LocalizedString.ProjectList.Create.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                    Button(LocalizedString.ProjectList.Create.cancel) {
                         viewModel.showingCreateDialog = false
                     }
                     .foregroundColor(ColorTheme.textSecondary)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("创建") {
+                    Button(LocalizedString.ProjectList.Create.confirm) {
                         viewModel.createProject()
                     }
                     .foregroundColor(ColorTheme.primary)
@@ -180,10 +172,10 @@ struct ProjectListView: View {
     }
 }
 
-// MARK: - Project Card View
+// MARK: - Project Card
 
-struct ProjectCardView: View {
-    let project: Project
+struct ProjectCard: View {
+    let project: ProjectModel
     let onTap: () -> Void
     let onDelete: () -> Void
     let onDuplicate: () -> Void
@@ -211,8 +203,8 @@ struct ProjectCardView: View {
                 
                 // 信息行
                 HStack(spacing: 16) {
-                    Label("\(project.trackCount) 轨道", systemImage: "waveform")
-                    Label("\(project.audioSettings.bpm) BPM", systemImage: "metronome")
+                    Label("\(project.trackCount) 音轨", systemImage: "waveform")
+                    Label("\(project.bpm) BPM", systemImage: "metronome")
                     Label(project.formattedDuration(), systemImage: "clock")
                 }
                 .font(.caption)
@@ -226,9 +218,9 @@ struct ProjectCardView: View {
                 // 音轨颜色预览
                 if !project.tracks.isEmpty {
                     HStack(spacing: 4) {
-                        ForEach(project.tracks.prefix(8)) { track in
+                        ForEach(project.tracks.prefix(4)) { track in
                             RoundedRectangle(cornerRadius: 2)
-                                .fill(ColorTheme.trackColor(at: track.colorIndex))
+                                .fill(Color(hex: track.colorHex) ?? ColorTheme.primary)
                                 .frame(height: 4)
                         }
                     }
@@ -240,20 +232,20 @@ struct ProjectCardView: View {
             .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
         }
         .buttonStyle(PlainButtonStyle())
-        .confirmationDialog("项目选项", isPresented: $showingOptions) {
-            Button("打开") {
+        .confirmationDialog(LocalizedString.ProjectList.Menu.options, isPresented: $showingOptions) {
+            Button(LocalizedString.ProjectList.Menu.open) {
                 onTap()
             }
             
-            Button("复制") {
+            Button(LocalizedString.ProjectList.Menu.duplicate) {
                 onDuplicate()
             }
             
-            Button("删除", role: .destructive) {
+            Button(LocalizedString.ProjectList.Menu.delete, role: .destructive) {
                 onDelete()
             }
             
-            Button("取消", role: .cancel) { }
+            Button(LocalizedString.Common.cancel, role: .cancel) { }
         }
     }
     
@@ -264,7 +256,8 @@ struct ProjectCardView: View {
     }
 }
 
-#Preview {
-    ProjectListView(projectManager: ProjectManager())
-}
+// MARK: - Preview
 
+#Preview {
+    ProjectListView()
+}

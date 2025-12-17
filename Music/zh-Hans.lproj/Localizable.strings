@@ -1,0 +1,179 @@
+/* 
+  Localizable.strings (Simplified Chinese)
+  Music
+  
+  Created on 2025/12/08.
+*/
+
+// MARK: - Project List
+
+"project_list.title" = "我的项目";
+"project_list.empty.title" = "还没有项目";
+"project_list.empty.message" = "点击右上角的 + 按钮\n创建你的第一个音乐项目";
+"project_list.empty.create_button" = "创建项目";
+"project_list.create.title" = "新建项目";
+"project_list.create.name_label" = "项目名称";
+"project_list.create.name_placeholder" = "输入项目名称";
+"project_list.create.cancel" = "取消";
+"project_list.create.confirm" = "创建";
+"project_list.card.tracks" = "轨道";
+"project_list.card.modified" = "修改于";
+"project_list.menu.open" = "打开";
+"project_list.menu.duplicate" = "复制";
+"project_list.menu.delete" = "删除";
+"project_list.menu.options" = "项目选项";
+
+// MARK: - Recording View
+
+"recording.title" = "录音";
+"recording.bpm.label" = "BPM";
+"recording.metronome" = "节拍器";
+"recording.empty.title" = "还没有音轨";
+"recording.empty.message" = "点击下方的录音按钮\n开始录制你的第一个音轨";
+"recording.controls.cancel" = "取消";
+"recording.controls.recording" = "录音中...";
+"recording.hint.record_new" = "点按录制新音轨";
+"recording.hint.start" = "点按开始录音";
+"recording.hint.max_tracks" = "已达到最大音轨数量（4轨）";
+"recording.menu.export" = "导出音频";
+"recording.menu.settings" = "项目设置";
+
+// MARK: - Track Row
+
+"track.delete.title" = "删除音轨";
+"track.delete.message" = "确定要删除音轨 \"%@\" 吗？此操作无法撤销。";
+"track.delete.confirm" = "删除";
+"track.delete.cancel" = "取消";
+"track.solo.label" = "S";
+"track.mute.icon" = "speaker.slash.fill";
+"track.unmute.icon" = "speaker.wave.2.fill";
+
+// MARK: - Metronome
+
+"metronome.label" = "节拍器";
+"metronome.bpm" = "%d BPM";
+
+// MARK: - Playback Control
+
+"playback.play" = "播放";
+"playback.pause" = "暂停";
+"playback.stop" = "停止";
+
+// MARK: - Common
+
+"common.ok" = "确定";
+"common.cancel" = "取消";
+"common.delete" = "删除";
+"common.save" = "保存";
+"common.error" = "错误";
+
+// MARK: - Error Messages - Project Manager
+
+"error.project.not_found" = "项目不存在";
+"error.project.save_failed" = "保存项目失败";
+"error.project.load_failed" = "加载项目失败";
+"error.project.delete_failed" = "删除项目失败";
+"error.project.export_failed" = "导出音频失败";
+
+// MARK: - Error Messages - Audio Recorder
+
+"error.recorder.failed" = "录音失败，请重试";
+"error.recorder.permission_denied" = "需要麦克风权限才能录音";
+"error.recorder.session_failed" = "音频系统初始化失败";
+"error.recorder.invalid_settings" = "音频设置无效";
+
+// MARK: - Error Messages - Audio Player
+
+"error.player.file_not_found" = "音频文件不存在";
+"error.player.playback_failed" = "播放失败";
+"error.player.invalid_file" = "无效的音频文件";
+"error.player.engine_not_started" = "音频引擎未启动";
+
+// MARK: - Color Theme Preview
+
+"color_theme.primary" = "主题色";
+"color_theme.functional" = "功能色";
+"color_theme.tracks" = "音轨颜色";
+"color_theme.gradients" = "渐变效果";
+"color_theme.gradient.primary" = "主题渐变";
+"color_theme.gradient.background" = "背景渐变";
+
+// MARK: - Export
+
+"export.format.wav" = "WAV (无损)";
+"export.format.mp3" = "MP3 (压缩)";
+"export.format.m4a" = "M4A (AAC)";
+
+// MARK: - Permissions
+
+"permission.microphone.title" = "需要麦克风权限";
+"permission.microphone.message" = "需要使用麦克风进行音频录制，以便创作音乐作品。";
+
+// MARK: - Track Detail
+
+"track_detail.title" = "音轨设置";
+"track_detail.name_label" = "音轨名称";
+"track_detail.name_placeholder" = "输入名称";
+"track_detail.volume_label" = "音量";
+"track_detail.mute_label" = "静音";
+"track_detail.solo_label" = "独奏";
+"track_detail.delete_button" = "删除音轨";
+"track_detail.cancel" = "取消";
+"track_detail.done" = "完成";
+
+// MARK: - Export View
+
+"export.title" = "导出作品";
+"export.format_label" = "导出格式";
+"export.start_button" = "开始导出";
+"export.exporting" = "正在导出...";
+"export.exporting_message" = "请稍候，正在混音并导出您的作品";
+"export.success_title" = "导出成功！";
+"export.success_message" = "您的作品已成功导出";
+"export.share_button" = "分享";
+"export.done_button" = "完成";
+
+// MARK: - Main View
+
+"main.back_to_projects" = "项目";
+"main.menu.export" = "导出作品";
+"main.metronome_label" = "节拍器";
+"main.recording.cancel" = "取消";
+"main.recording.hint_new" = "点击录制新音轨";
+"main.recording.hint_start" = "点击开始录音";
+"main.recording.max_tracks" = "已达到最大音轨数量（4轨）";
+
+// MARK: - Track Card
+
+"track_card.empty" = "未录音";
+"track_card.empty_slot" = "空";
+
+// MARK: - Audio Engine Errors
+
+"audio_engine.not_started" = "音频引擎未启动";
+"audio_engine.recording_failed" = "录音失败";
+"audio_engine.playback_failed" = "播放失败";
+"audio_engine.permission_denied" = "麦克风权限被拒绝";
+
+// MARK: - View Model Messages
+
+"viewmodel.no_undo" = "没有可撤销的操作";
+"viewmodel.max_tracks_reached" = "已达到最大音轨数量（4轨）";
+"viewmodel.recording_failed" = "录音失败：%@";
+"viewmodel.save_failed" = "保存项目失败：%@";
+"viewmodel.name_required" = "请输入项目名称";
+
+// MARK: - Repository Errors
+
+"repository.project_not_found" = "项目不存在";
+"repository.save_failed" = "保存项目失败：%@";
+"repository.load_failed" = "加载项目失败：%@";
+"repository.delete_failed" = "删除项目失败：%@";
+"repository.export_failed" = "导出失败：%@";
+
+// MARK: - Audio Exporter Errors
+
+"exporter.format_creation_failed" = "创建音频格式失败";
+"exporter.buffer_creation_failed" = "创建混音缓冲区失败";
+
+

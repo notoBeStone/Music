@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings (Simplified Chinese)
+  Music
+  
+  Localized permission descriptions
+*/
+
+"NSMicrophoneUsageDescription" = "需要使用麦克风进行音频录制，以便创作音乐作品。";
+"CFBundleDisplayName" = "乐起";
+"CFBundleName" = "乐起";
+
+

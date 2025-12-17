@@ -180,7 +180,7 @@ extension Color {
         VStack(spacing: 20) {
             // 主题色展示
             VStack(alignment: .leading, spacing: 10) {
-                Text("主题色")
+                Text(LocalizedString.ColorTheme.primary)
                     .font(.headline)
                     .foregroundColor(ColorTheme.textPrimary)
                 
@@ -197,7 +197,7 @@ extension Color {
             
             // 功能色展示
             VStack(alignment: .leading, spacing: 10) {
-                Text("功能色")
+                Text(LocalizedString.ColorTheme.functional)
                     .font(.headline)
                     .foregroundColor(ColorTheme.textPrimary)
                 
@@ -214,7 +214,7 @@ extension Color {
             
             // 音轨颜色展示
             VStack(alignment: .leading, spacing: 10) {
-                Text("音轨颜色")
+                Text(LocalizedString.ColorTheme.tracks)
                     .font(.headline)
                     .foregroundColor(ColorTheme.textPrimary)
                 
@@ -230,7 +230,7 @@ extension Color {
             
             // 渐变展示
             VStack(alignment: .leading, spacing: 10) {
-                Text("渐变效果")
+                Text(LocalizedString.ColorTheme.gradients)
                     .font(.headline)
                     .foregroundColor(ColorTheme.textPrimary)
                 
@@ -239,7 +239,7 @@ extension Color {
                         .fill(ColorTheme.primaryGradient)
                         .frame(height: 60)
                         .overlay(
-                            Text("主题渐变")
+                            Text(LocalizedString.ColorTheme.Gradient.primary)
                                 .foregroundColor(.white)
                                 .font(.subheadline)
                         )
@@ -248,7 +248,7 @@ extension Color {
                         .fill(ColorTheme.backgroundGradient)
                         .frame(height: 60)
                         .overlay(
-                            Text("背景渐变")
+                            Text(LocalizedString.ColorTheme.Gradient.background)
                                 .foregroundColor(ColorTheme.textPrimary)
                                 .font(.subheadline)
                         )

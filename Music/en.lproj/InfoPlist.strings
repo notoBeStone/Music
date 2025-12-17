@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings (English)
+  Music
+  
+  Localized permission descriptions
+*/
+
+"NSMicrophoneUsageDescription" = "Microphone access is required to record audio for music creation.";
+"CFBundleDisplayName" = "LoopBeat";
+"CFBundleName" = "LoopBeat";
+
+

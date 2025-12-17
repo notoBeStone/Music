@@ -10,26 +10,26 @@ import AVFoundation
 
 @main
 struct MusicApp: App {
-    // MARK: - Properties
-    
-    @StateObject private var projectManager = ProjectManager()
-    
     // MARK: - Initialization
     
     init() {
-        // 配置音频会话
+        // 配置音频会话和导航栏
+        Self.configureApp()
+    }
+    
+    // MARK: - Static Configuration
+    
+    private static func configureApp() {
         configureAudioSession()
-        
-        // 配置导航栏样式
         configureNavigationBarAppearance()
     }
+    
     
     // MARK: - Body
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(projectManager)
                 .preferredColorScheme(.dark) // 强制深色模式
         }
     }
@@ -37,7 +37,7 @@ struct MusicApp: App {
     // MARK: - Configuration
     
     /// 配置音频会话
-    private func configureAudioSession() {
+    private static func configureAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
@@ -50,7 +50,7 @@ struct MusicApp: App {
     }
     
     /// 配置导航栏样式
-    private func configureNavigationBarAppearance() {
+    private static func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(ColorTheme.background)

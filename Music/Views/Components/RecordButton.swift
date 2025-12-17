@@ -2,7 +2,7 @@
 //  RecordButton.swift
 //  Music
 //
-//  Created by 彭瑞淋 on 2025/12/8.
+//  Created by AI on 2025/12/16.
 //
 
 import SwiftUI
@@ -91,19 +91,10 @@ struct RecordButton: View {
 
 #Preview {
     VStack(spacing: 40) {
-        RecordButton(isRecording: false, isEnabled: true) {
-            print("开始录音")
-        }
-        
-        RecordButton(isRecording: true, isEnabled: true) {
-            print("停止录音")
-        }
-        
-        RecordButton(isRecording: false, isEnabled: false) {
-            print("禁用")
-        }
+        RecordButton(isRecording: false, isEnabled: true) {}
+        RecordButton(isRecording: true, isEnabled: true) {}
+        RecordButton(isRecording: false, isEnabled: false) {}
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(ColorTheme.background)
 }
-

@@ -1,25 +1,28 @@
 //
-//  Project.swift
+//  ProjectModel.swift
 //  Music
 //
-//  Created by 彭瑞淋 on 2025/12/8.
+//  Created by AI on 2025/12/16.
 //
 
 import Foundation
 
 /// 项目数据模型
-struct Project: Identifiable, Codable {
+struct ProjectModel: Identifiable, Codable, Hashable {
     /// 唯一标识符
     let id: UUID
     
     /// 项目名称
     var name: String
     
-    /// 音轨列表
-    var tracks: [Track]
+    /// BPM（每分钟节拍数，范围：60 ~ 200）
+    var bpm: Int
     
-    /// 音频设置
-    var audioSettings: AudioSettings
+    /// 循环小节数（例如 2 / 4 / 8）
+    var loopBars: Int
+    
+    /// 音轨列表
+    var tracks: [TrackModel]
     
     /// 创建时间
     let createdAt: Date
@@ -31,26 +34,29 @@ struct Project: Identifiable, Codable {
     init(
         id: UUID = UUID(),
         name: String,
-        tracks: [Track] = [],
-        audioSettings: AudioSettings = .default,
+        bpm: Int = 120,
+        loopBars: Int = 4,
+        tracks: [TrackModel] = [],
         createdAt: Date = Date(),
         modifiedAt: Date = Date()
     ) {
         self.id = id
         self.name = name
+        self.bpm = max(60, min(200, bpm)) // 限制范围
+        self.loopBars = loopBars
         self.tracks = tracks
-        self.audioSettings = audioSettings
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }
 }
 
-// MARK: - Project Extensions
+// MARK: - ProjectModel Extensions
 
-extension Project {
-    /// 项目总时长（基于循环长度）
-    var duration: TimeInterval {
-        return audioSettings.loopLength
+extension ProjectModel {
+    /// 计算循环长度（秒）
+    /// 公式：(小节数 × 4拍/小节 × 60秒/分钟) / BPM
+    var loopLength: TimeInterval {
+        return Double(loopBars * 4) * 60.0 / Double(bpm)
     }
     
     /// 音轨数量
@@ -60,36 +66,29 @@ extension Project {
     
     /// 是否有独奏轨道
     var hasSoloTracks: Bool {
-        return tracks.contains { $0.isSolo }
+        return tracks.contains { $0.solo }
     }
     
-    /// 可以添加新轨道（最多4轨，MVP版本）
+    /// 是否可以添加新轨道（MVP 最多 4 轨）
     var canAddTrack: Bool {
         return tracks.count < 4
     }
     
-    /// 添加新轨道
-    mutating func addTrack(_ track: Track) {
+    /// 添加音轨
+    mutating func addTrack(_ track: TrackModel) {
         guard canAddTrack else { return }
         tracks.append(track)
         modifiedAt = Date()
     }
     
-    /// 删除轨道
-    mutating func removeTrack(at index: Int) {
-        guard index >= 0 && index < tracks.count else { return }
-        tracks.remove(at: index)
-        modifiedAt = Date()
-    }
-    
-    /// 删除轨道（通过ID）
+    /// 删除音轨（通过 ID）
     mutating func removeTrack(id: UUID) {
         tracks.removeAll { $0.id == id }
         modifiedAt = Date()
     }
     
-    /// 更新轨道
-    mutating func updateTrack(_ track: Track) {
+    /// 更新音轨
+    mutating func updateTrack(_ track: TrackModel) {
         if let index = tracks.firstIndex(where: { $0.id == track.id }) {
             tracks[index] = track
             modifiedAt = Date()
@@ -98,9 +97,8 @@ extension Project {
     
     /// 格式化时长显示
     func formattedDuration() -> String {
-        let minutes = Int(duration) / 60
-        let seconds = Int(duration) % 60
+        let minutes = Int(loopLength) / 60
+        let seconds = Int(loopLength) % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
 }
-

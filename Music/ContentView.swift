@@ -9,18 +9,13 @@ import SwiftUI
 
 /// 主视图容器
 struct ContentView: View {
-    // MARK: - Properties
-    
-    @EnvironmentObject private var projectManager: ProjectManager
-    
     // MARK: - Body
     
     var body: some View {
-        ProjectListView(projectManager: projectManager)
+        ProjectListView()
     }
 }
 
 #Preview {
     ContentView()
-        .environmentObject(ProjectManager())
 }

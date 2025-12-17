@@ -1,0 +1,179 @@
+/* 
+  Localizable.strings (English)
+  Music
+  
+  Created on 2025/12/08.
+*/
+
+// MARK: - Project List
+
+"project_list.title" = "My Projects";
+"project_list.empty.title" = "No Projects Yet";
+"project_list.empty.message" = "Tap the + button in the top right\nto create your first music project";
+"project_list.empty.create_button" = "Create Project";
+"project_list.create.title" = "New Project";
+"project_list.create.name_label" = "Project Name";
+"project_list.create.name_placeholder" = "Enter project name";
+"project_list.create.cancel" = "Cancel";
+"project_list.create.confirm" = "Create";
+"project_list.card.tracks" = "tracks";
+"project_list.card.modified" = "Modified";
+"project_list.menu.open" = "Open";
+"project_list.menu.duplicate" = "Duplicate";
+"project_list.menu.delete" = "Delete";
+"project_list.menu.options" = "Project Options";
+
+// MARK: - Recording View
+
+"recording.title" = "Recording";
+"recording.bpm.label" = "BPM";
+"recording.metronome" = "Metronome";
+"recording.empty.title" = "No Tracks Yet";
+"recording.empty.message" = "Tap the record button below\nto record your first track";
+"recording.controls.cancel" = "Cancel";
+"recording.controls.recording" = "Recording...";
+"recording.hint.record_new" = "Tap to record new track";
+"recording.hint.start" = "Tap to start recording";
+"recording.hint.max_tracks" = "Max tracks reached (4 tracks)";
+"recording.menu.export" = "Export Audio";
+"recording.menu.settings" = "Project Settings";
+
+// MARK: - Track Row
+
+"track.delete.title" = "Delete Track";
+"track.delete.message" = "Are you sure you want to delete track \"%@\"? This action cannot be undone.";
+"track.delete.confirm" = "Delete";
+"track.delete.cancel" = "Cancel";
+"track.solo.label" = "S";
+"track.mute.icon" = "speaker.slash.fill";
+"track.unmute.icon" = "speaker.wave.2.fill";
+
+// MARK: - Metronome
+
+"metronome.label" = "Metronome";
+"metronome.bpm" = "%d BPM";
+
+// MARK: - Playback Control
+
+"playback.play" = "Play";
+"playback.pause" = "Pause";
+"playback.stop" = "Stop";
+
+// MARK: - Common
+
+"common.ok" = "OK";
+"common.cancel" = "Cancel";
+"common.delete" = "Delete";
+"common.save" = "Save";
+"common.error" = "Error";
+
+// MARK: - Error Messages - Project Manager
+
+"error.project.not_found" = "Project not found";
+"error.project.save_failed" = "Failed to save project";
+"error.project.load_failed" = "Failed to load project";
+"error.project.delete_failed" = "Failed to delete project";
+"error.project.export_failed" = "Failed to export audio";
+
+// MARK: - Error Messages - Audio Recorder
+
+"error.recorder.failed" = "Recording failed, please try again";
+"error.recorder.permission_denied" = "Microphone permission is required for recording";
+"error.recorder.session_failed" = "Audio system initialization failed";
+"error.recorder.invalid_settings" = "Invalid audio settings";
+
+// MARK: - Error Messages - Audio Player
+
+"error.player.file_not_found" = "Audio file not found";
+"error.player.playback_failed" = "Playback failed";
+"error.player.invalid_file" = "Invalid audio file";
+"error.player.engine_not_started" = "Audio engine not started";
+
+// MARK: - Color Theme Preview
+
+"color_theme.primary" = "Primary Colors";
+"color_theme.functional" = "Functional Colors";
+"color_theme.tracks" = "Track Colors";
+"color_theme.gradients" = "Gradient Effects";
+"color_theme.gradient.primary" = "Primary Gradient";
+"color_theme.gradient.background" = "Background Gradient";
+
+// MARK: - Export
+
+"export.format.wav" = "WAV (Lossless)";
+"export.format.mp3" = "MP3 (Compressed)";
+"export.format.m4a" = "M4A (AAC)";
+
+// MARK: - Permissions
+
+"permission.microphone.title" = "Microphone Access Required";
+"permission.microphone.message" = "Microphone access is required to record audio for music creation.";
+
+// MARK: - Track Detail
+
+"track_detail.title" = "Track Settings";
+"track_detail.name_label" = "Track Name";
+"track_detail.name_placeholder" = "Enter name";
+"track_detail.volume_label" = "Volume";
+"track_detail.mute_label" = "Mute";
+"track_detail.solo_label" = "Solo";
+"track_detail.delete_button" = "Delete Track";
+"track_detail.cancel" = "Cancel";
+"track_detail.done" = "Done";
+
+// MARK: - Export View
+
+"export.title" = "Export Project";
+"export.format_label" = "Export Format";
+"export.start_button" = "Start Export";
+"export.exporting" = "Exporting...";
+"export.exporting_message" = "Please wait, mixing and exporting your project";
+"export.success_title" = "Export Successful!";
+"export.success_message" = "Your project has been exported successfully";
+"export.share_button" = "Share";
+"export.done_button" = "Done";
+
+// MARK: - Main View
+
+"main.back_to_projects" = "Projects";
+"main.menu.export" = "Export Project";
+"main.metronome_label" = "Metronome";
+"main.recording.cancel" = "Cancel";
+"main.recording.hint_new" = "Tap to record new track";
+"main.recording.hint_start" = "Tap to start recording";
+"main.recording.max_tracks" = "Max tracks reached (4 tracks)";
+
+// MARK: - Track Card
+
+"track_card.empty" = "No Audio";
+"track_card.empty_slot" = "Empty";
+
+// MARK: - Audio Engine Errors
+
+"audio_engine.not_started" = "Audio engine not started";
+"audio_engine.recording_failed" = "Recording failed";
+"audio_engine.playback_failed" = "Playback failed";
+"audio_engine.permission_denied" = "Microphone permission denied";
+
+// MARK: - View Model Messages
+
+"viewmodel.no_undo" = "No operations to undo";
+"viewmodel.max_tracks_reached" = "Max tracks reached (4 tracks)";
+"viewmodel.recording_failed" = "Recording failed: %@";
+"viewmodel.save_failed" = "Failed to save project: %@";
+"viewmodel.name_required" = "Please enter project name";
+
+// MARK: - Repository Errors
+
+"repository.project_not_found" = "Project not found";
+"repository.save_failed" = "Failed to save project: %@";
+"repository.load_failed" = "Failed to load project: %@";
+"repository.delete_failed" = "Failed to delete project: %@";
+"repository.export_failed" = "Export failed: %@";
+
+// MARK: - Audio Exporter Errors
+
+"exporter.format_creation_failed" = "Failed to create audio format";
+"exporter.buffer_creation_failed" = "Failed to create mix buffer";
+
+
