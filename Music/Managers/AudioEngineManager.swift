@@ -102,7 +102,7 @@ final class AudioEngineManager: ObservableObject {
     
     // MARK: - Audio Session Setup
     
-    /// 配置音频会话
+    /// 配置音频会话（初始化时调用）
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
@@ -117,14 +117,59 @@ final class AudioEngineManager: ObservableObject {
         }
     }
     
+    /// 配置音频会话用于录音（录音前调用）
+    private func setupAudioSessionForRecording() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        
+        // 配置音频会话为录音模式
+        try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+        try audioSession.setPreferredSampleRate(sampleRate)
+        try audioSession.setPreferredIOBufferDuration(256.0 / sampleRate)
+        
+        // 激活音频会话
+        try audioSession.setActive(true, options: [])
+        
+        print("[AudioEngineManager] 录音音频会话配置成功")
+    }
+    
     // MARK: - Engine Control
     
-    /// 启动音频引擎
+    /// 启动音频引擎（仅用于播放）
     func startEngine() throws {
-        guard !engine.isRunning else { return }
+        guard !engine.isRunning else {
+            print("[AudioEngineManager] 引擎已在运行")
+            return
+        }
         
-        try engine.start()
-        print("[AudioEngineManager] 音频引擎已启动")
+        print("[AudioEngineManager] 准备启动音频引擎...")
+        
+        // 确保音频会话已激活
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setActive(true, options: [])
+            print("[AudioEngineManager] 音频会话已激活")
+        } catch {
+            print("[AudioEngineManager] 激活音频会话失败：\(error.localizedDescription)")
+            throw error
+        }
+        
+        // 准备引擎（这会初始化音频节点）
+        do {
+            engine.prepare()
+            print("[AudioEngineManager] 引擎准备完成")
+        } catch {
+            print("[AudioEngineManager] 引擎准备失败：\(error.localizedDescription)")
+            throw error
+        }
+        
+        // 启动引擎
+        do {
+            try engine.start()
+            print("[AudioEngineManager] 音频引擎已启动")
+        } catch {
+            print("[AudioEngineManager] 引擎启动失败：\(error.localizedDescription)")
+            throw error
+        }
     }
     
     /// 停止音频引擎
@@ -146,11 +191,17 @@ final class AudioEngineManager: ObservableObject {
         self.loopBars = project.loopBars
         
         do {
-            // 确保引擎已启动
-            try startEngine()
-            
-            // 加载所有音轨
+            // 先加载所有音轨（连接节点到引擎）
             try loadAllTracks(project: project)
+            
+            // 检查是否有音轨可播放
+            guard !playerNodes.isEmpty else {
+                print("[AudioEngineManager] 没有可播放的音轨")
+                return
+            }
+            
+            // 再启动引擎
+            try startEngine()
             
             // 开始播放所有音轨
             playAllTracks()
@@ -181,9 +232,16 @@ final class AudioEngineManager: ObservableObject {
     
     /// 停止播放
     func stopPlayback() {
+        // 停止所有播放器节点
         for playerNode in playerNodes.values {
             playerNode.stop()
         }
+        
+        // 停止引擎
+        stopEngine()
+        
+        // 卸载所有音轨
+        unloadAllTracks()
         
         playbackState = .stopped
         currentTime = 0.0
@@ -206,8 +264,8 @@ final class AudioEngineManager: ObservableObject {
             throw AudioEngineError.permissionDenied
         }
         
-        // 确保引擎已启动
-        try startEngine()
+        // 重新配置音频会话（确保录音模式）
+        try setupAudioSessionForRecording()
         
         // 配置录音设置
         let settings: [String: Any] = [
@@ -245,6 +303,7 @@ final class AudioEngineManager: ObservableObject {
         guard recordingState == .recording, recordingTrackId == trackId else { return }
         
         audioRecorder?.stop()
+        audioRecorder = nil
         stopRecordingTimer()
         
         recordingState = .idle
@@ -263,10 +322,12 @@ final class AudioEngineManager: ObservableObject {
         
         audioRecorder?.stop()
         audioRecorder?.deleteRecording()
+        audioRecorder = nil
         stopRecordingTimer()
         
         recordingState = .idle
         recordingLevel = 0.0
+        
         recordingCompletion?(false)
         recordingCompletion = nil
         
@@ -303,6 +364,8 @@ final class AudioEngineManager: ObservableObject {
         
         let projectDir = FileManager.projectDirectory(for: project.id)
         
+        print("[AudioEngineManager] 开始加载音轨，项目目录：\(projectDir.path)")
+        
         for track in project.tracks where track.hasAudio {
             guard let filePath = track.filePath else { continue }
             
@@ -314,23 +377,35 @@ final class AudioEngineManager: ObservableObject {
                 continue
             }
             
-            // 加载音频文件
-            let audioFile = try AVAudioFile(forReading: fileURL)
-            audioFiles[track.id] = audioFile
-            
-            // 创建播放器节点
-            let playerNode = AVAudioPlayerNode()
-            playerNode.volume = track.muted ? 0.0 : track.volume
-            playerNode.pan = track.pan
-            
-            // 连接到引擎
-            engine.attach(playerNode)
-            engine.connect(playerNode, to: engine.mainMixerNode, format: audioFile.processingFormat)
-            
-            playerNodes[track.id] = playerNode
-            
-            print("[AudioEngineManager] 加载音轨：\(track.name)")
+            do {
+                // 加载音频文件
+                let audioFile = try AVAudioFile(forReading: fileURL)
+                audioFiles[track.id] = audioFile
+                
+                // 创建播放器节点
+                let playerNode = AVAudioPlayerNode()
+                playerNode.volume = track.muted ? 0.0 : track.volume
+                playerNode.pan = track.pan
+                
+                // 连接到引擎
+                engine.attach(playerNode)
+                
+                // 使用音频文件的格式连接节点
+                let format = audioFile.processingFormat
+                print("[AudioEngineManager] 连接音轨：\(track.name)，格式：\(format.sampleRate)Hz, \(format.channelCount)声道")
+                
+                engine.connect(playerNode, to: engine.mainMixerNode, format: format)
+                
+                playerNodes[track.id] = playerNode
+                
+                print("[AudioEngineManager] 加载音轨成功：\(track.name)")
+            } catch {
+                print("[AudioEngineManager] 加载音轨失败：\(track.name)，错误：\(error.localizedDescription)")
+                throw error
+            }
         }
+        
+        print("[AudioEngineManager] 共加载 \(playerNodes.count) 个音轨")
     }
     
     /// 卸载所有音轨

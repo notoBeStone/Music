@@ -12,76 +12,76 @@ struct ColorTheme {
     
     // MARK: - 主题色 (Primary Colors)
     
-    /// 主色调 - 紫色渐变起点（用于主要按钮、强调元素）
-    static let primary = Color("7C3AED")  // 鲜艳的紫色
+    /// 主色调 - 活力橙（用于主要按钮、强调元素）
+    static let primary = Color(hex: "FF6B35")!  // 活力橙
     
-    /// 主色调变体 - 蓝紫色渐变终点
-    static let primaryVariant = Color("3B82F6")  // 明亮的蓝色
+    /// 主色调变体 - 温暖橙
+    static let primaryVariant = Color(hex: "F7931E")!  // 温暖橙
     
-    /// 次要色 - 青色（用于辅助元素、高亮）
-    static let secondary = Color("06B6D4")  // 青色
+    /// 次要色 - 金黄色（用于辅助元素、高亮）
+    static let secondary = Color(hex: "FFC857")!  // 金黄
     
-    /// 强调色 - 粉色（用于录音、重要提示）
-    static let accent = Color("EC4899")  // 粉色
+    /// 强调色 - 录音红（用于录音、重要提示）
+    static let accent = Color(hex: "DC2626")!  // 录音红
     
     
     // MARK: - 背景色 (Background Colors)
     
     /// 主背景色 - 深灰黑
-    static let background = Color("0F0F0F")
+    static let background = Color(hex: "0F0F0F")!
     
     /// 次级背景色 - 稍浅的深灰
-    static let backgroundSecondary = Color("1A1A1A")
+    static let backgroundSecondary = Color(hex: "1A1A1A")!
     
     /// 卡片/面板背景色
-    static let cardBackground = Color("242424")
+    static let cardBackground = Color(hex: "242424")!
     
     /// 输入框/控件背景色
-    static let inputBackground = Color("2A2A2A")
+    static let inputBackground = Color(hex: "2A2A2A")!
     
     
     // MARK: - 文本色 (Text Colors)
     
     /// 主要文本色 - 白色
-    static let textPrimary = Color("FFFFFF")
+    static let textPrimary = Color(hex: "FFFFFF")!
     
     /// 次要文本色 - 浅灰色
-    static let textSecondary = Color("A0A0A0")
+    static let textSecondary = Color(hex: "A0A0A0")!
     
     /// 禁用/提示文本色 - 深灰色
-    static let textTertiary = Color("666666")
+    static let textTertiary = Color(hex: "666666")!
     
     /// 反色文本 - 黑色（用于浅色背景）
-    static let textInverse = Color("000000")
+    static let textInverse = Color(hex: "000000")!
     
     
     // MARK: - 功能色 (Functional Colors)
     
     /// 成功色 - 绿色
-    static let success = Color("10B981")
+    static let success = Color(hex: "10B981")!
     
     /// 警告色 - 橙色
-    static let warning = Color("F59E0B")
+    static let warning = Color(hex: "F59E0B")!
     
     /// 错误色 - 红色
-    static let error = Color("EF4444")
+    static let error = Color(hex: "EF4444")!
     
     /// 信息色 - 蓝色
-    static let info = Color("3B82F6")
+    static let info = Color(hex: "3B82F6")!
     
     
     // MARK: - 音轨颜色 (Track Colors)
     
     /// 预设的音轨颜色数组（用于区分不同音轨）
     static let trackColors: [Color] = [
-        Color("EF4444"),  // 红色
-        Color("F59E0B"),  // 橙色
-        Color("10B981"),  // 绿色
-        Color("3B82F6"),  // 蓝色
-        Color("8B5CF6"),  // 紫色
-        Color("EC4899"),  // 粉色
-        Color("06B6D4"),  // 青色
-        Color("F97316"),  // 深橙色
+        Color(hex: "FF6B35")!,  // 活力橙
+        Color(hex: "FFC857")!,  // 金黄
+        Color(hex: "F59E0B")!,  // 橙色
+        Color(hex: "FBBF24")!,  // 亮黄
+        Color(hex: "EF4444")!,  // 红色
+        Color(hex: "F97316")!,  // 深橙色
+        Color(hex: "FDBA74")!,  // 浅橙
+        Color(hex: "FB923C")!,  // 中橙
     ]
     
     /// 获取指定索引的音轨颜色
@@ -93,23 +93,36 @@ struct ColorTheme {
     // MARK: - 边框/分割线 (Borders & Dividers)
     
     /// 边框色
-    static let border = Color("333333")
+    static let border = Color(hex: "333333")!
     
     /// 分割线色
-    static let divider = Color("2A2A2A")
+    static let divider = Color(hex: "2A2A2A")!
     
     /// 高亮边框色（用于选中状态）
-    static let borderHighlight = Color("7C3AED")
+    static let borderHighlight = Color(hex: "FF6B35")!
     
     
     // MARK: - 渐变 (Gradients)
     
-    /// 主题渐变（紫色到蓝色）
+    /// 主题渐变（橙色到金黄）
     static var primaryGradient: LinearGradient {
         LinearGradient(
-            colors: [primary, primaryVariant],
+            colors: [primary, primaryVariant, secondary],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
+        )
+    }
+    
+    /// 日落渐变（用于背景装饰）
+    static var sunsetGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                primary.opacity(0.8),
+                primaryVariant.opacity(0.6),
+                secondary.opacity(0.4)
+            ],
+            startPoint: .top,
+            endPoint: .bottom
         )
     }
     
@@ -138,16 +151,16 @@ struct ColorTheme {
     // MARK: - 特殊效果 (Special Effects)
     
     /// 录音指示灯颜色（红色）
-    static let recordingIndicator = Color("DC2626")
+    static let recordingIndicator = Color(hex: "DC2626")!
     
     /// 播放指示灯颜色（绿色）
-    static let playingIndicator = Color("10B981")
+    static let playingIndicator = Color(hex: "10B981")!
     
-    /// 波形颜色（青色）
-    static let waveform = Color("06B6D4")
+    /// 波形颜色（金黄色）
+    static let waveform = Color(hex: "FFC857")!
     
     /// 节拍器颜色（黄色）
-    static let metronome = Color("FBBF24")
+    static let metronome = Color(hex: "FBBF24")!
 }
 
 
